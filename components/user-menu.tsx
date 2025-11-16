@@ -7,8 +7,6 @@ export default function UserMenu() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  console.log(user);
-
   if (!user) {
     return null;
   }
@@ -20,7 +18,11 @@ export default function UserMenu() {
     if (user?.first_name) {
       return user.first_name;
     }
-    if (user?.name) {
+    if (user?.last_name) {
+      return user.last_name;
+    }
+    // Skip name if it contains "undefined"
+    if (user?.name && !user.name.includes("undefined")) {
       return user.name;
     }
     return user?.username || "User";

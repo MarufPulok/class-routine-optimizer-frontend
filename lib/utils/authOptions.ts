@@ -19,11 +19,16 @@ export const authOptions: NextAuthOptions = {
 
         try {
           const res = await authService.login({ username, password });
+          const fullName = 
+            res.user.first_name && res.user.last_name
+              ? `${res.user.first_name} ${res.user.last_name}`.trim()
+              : res.user.first_name || res.user.last_name || res.user.username;
+
           return {
             id: res.user.id.toString(), // Convert number to string for NextAuth
             username: res.user.username,
             email: res.user.email,
-            name: `${res.user.first_name} ${res.user.last_name}`.trim() || res.user.username,
+            name: fullName,
             first_name: res.user.first_name,
             last_name: res.user.last_name,
             date_joined: res.user.date_joined,
