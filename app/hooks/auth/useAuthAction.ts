@@ -39,7 +39,14 @@ export default function useAuthAction() {
 
   const signoutMutation = useMutation({
     mutationFn: async () => {
-      await authService.logout();
+      // Try to logout from backend, but don't fail if token is invalid
+      try {
+        await authService.logout();
+      } catch (error) {
+        // Token might be invalid/expired, continue with NextAuth signOut anyway
+        console.warn('Backend logout failed, continuing with session cleanup:', error);
+      }
+      // Always sign out from NextAuth session
       await signOut({
         callbackUrl: '/login',
       });
