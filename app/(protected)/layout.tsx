@@ -1,3 +1,5 @@
+import { AppLogo } from "@/components/app-logo";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { ModeToggle } from "@/components/mode-toggle";
 import UserMenu from "@/components/user-menu";
 import { ReactNode } from "react";
@@ -8,7 +10,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <AppLogo />
             <div className="flex items-center gap-3">
               <ModeToggle />
               <UserMenu />
@@ -16,7 +18,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-8">{children}</main>
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <BreadcrumbNav />
+        </div>
+        {children}
+      </main>
     </div>
   );
 }
