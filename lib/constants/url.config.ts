@@ -9,6 +9,15 @@ export const APIUrl = {
     profile: () => '/api/accounts/profile/',
     refreshToken: () => '/api/accounts/token/refresh/',
   },
+  routine: {
+    dashboard: {
+      stats: () => '/api/routine/dashboard/stats/',
+      generationHistory: () => '/api/routine/dashboard/generation-history/',
+    },
+    sections: {
+      status: () => '/api/routine/sections/status/',
+    },
+  },
 };
 
 export const RouteUrls = {
