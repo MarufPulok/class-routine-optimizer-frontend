@@ -1,5 +1,5 @@
+import { TokenResponse } from "@/lib/dtos/auth.res.dto";
 import authService from "@/lib/services/auth.service";
-import { TokenResponse } from "@/lib/types/auth";
 import type { User } from "next-auth";
 import { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";

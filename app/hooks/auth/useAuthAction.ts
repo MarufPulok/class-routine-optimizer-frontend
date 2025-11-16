@@ -3,13 +3,13 @@
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
 import authService from '@/lib/services/auth.service';
-import { LoginRequest, RegisterRequest } from '@/lib/types/auth';
+import { LoginRequestDto, RegisterRequestDto } from '@/lib/dtos/auth.req.dto';
 
 export default function useAuthAction() {
   const { data: session } = useSession();
 
   const signinMutation = useMutation({
-    mutationFn: async (data: LoginRequest) => {
+    mutationFn: async (data: LoginRequestDto) => {
       const res = await signIn('credentials', {
         redirect: false,
         callbackUrl: '/dashboard',
@@ -26,7 +26,7 @@ export default function useAuthAction() {
   });
 
   const signupMutation = useMutation({
-    mutationFn: async (data: RegisterRequest) => {
+    mutationFn: async (data: RegisterRequestDto) => {
       const res = await authService.register(data);
       // After successful registration, automatically sign in
       await signIn('credentials', {

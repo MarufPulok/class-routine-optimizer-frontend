@@ -1,14 +1,7 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import useAuthAction from '@/app/hooks/auth/useAuthAction';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import useAuthAction from "@/app/hooks/auth/useAuthAction";
+import SignInForm from "@/components/SignInForm";
 import {
   Card,
   CardContent,
@@ -16,47 +9,26 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { RouteUrls } from '@/lib/constants/url.config';
-
-const loginSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  password: z.string().min(1, 'Password is required'),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+} from "@/components/ui/card";
+import { RouteUrls } from "@/lib/constants/url.config";
+import { LoginRequestDto } from "@/lib/dtos/auth.req.dto";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
   const { signinMutation } = useAuthAction();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: '',
-      password: '',
-    },
-  });
-
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = (data: LoginRequestDto) => {
     signinMutation.mutate(data, {
       onSuccess: () => {
-        toast.success('Login successful');
+        toast.success("Login successful");
         router.push(RouteUrls.dashboard.index);
         router.refresh();
       },
       onError: (error: Error) => {
-        toast.error(error.message || 'Invalid credentials');
+        toast.error(error.message || "Invalid credentials");
       },
     });
   };
@@ -69,68 +41,20 @@ export default function LoginPage() {
           Enter your credentials to access your account
         </CardDescription>
       </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter your username"
-                      autoComplete="username"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      autoComplete="current-password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={signinMutation.isPending}
-            >
-              {signinMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              {signinMutation.isPending ? 'Logging in...' : 'Login'}
-            </Button>
-            <div className="text-sm text-center text-muted-foreground">
-              Don't have an account?{' '}
-              <Link
-                href={RouteUrls.auth.register}
-                className="text-primary hover:underline font-medium"
-              >
-                Register
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Form>
+      <CardContent>
+        <SignInForm onSubmit={onSubmit} isLoading={signinMutation.isPending} />
+      </CardContent>
+      <CardFooter>
+        <div className="text-sm text-center text-muted-foreground w-full">
+          Don&apos;t have an account?{" "}
+          <Link
+            href={RouteUrls.auth.register}
+            className="text-primary hover:underline font-medium"
+          >
+            Register
+          </Link>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

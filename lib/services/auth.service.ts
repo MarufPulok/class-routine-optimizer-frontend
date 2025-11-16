@@ -1,14 +1,15 @@
 import { APIUrl } from '@/lib/constants/url.config';
-import { LoginRequest, RegisterRequest, AuthResponse, UserResponse, TokenResponse } from '@/lib/types/auth';
+import { AuthResponse, UserResponse, TokenResponse } from '@/lib/dtos/auth.res.dto';
+import { LoginRequestDto, RegisterRequestDto } from '@/lib/dtos/auth.req.dto';
 import httpClient, { httpClientWithoutToken } from '@/lib/utils/httpClient';
 
 class AuthService {
-  async login(data: LoginRequest) {
+  async login(data: LoginRequestDto) {
     const res = await httpClient.post<{ user: UserResponse; tokens: TokenResponse }>(APIUrl.auth.login(), data);
     return res.data;
   }
 
-  async register(data: RegisterRequest) {
+  async register(data: RegisterRequestDto) {
     const res = await httpClient.post<{ user: UserResponse; tokens: TokenResponse }>(APIUrl.auth.register(), data);
     return res.data;
   }

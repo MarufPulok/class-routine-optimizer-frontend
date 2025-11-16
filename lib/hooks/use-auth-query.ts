@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import httpClient from '@/lib/utils/httpClient';
 import { APIUrl } from '@/lib/constants/url.config';
-import { UserResponse } from '@/lib/types/auth';
+import { UserResponse } from '@/lib/dtos/auth.res.dto';
 import { useSession } from 'next-auth/react';
 
 export function useUser() {
