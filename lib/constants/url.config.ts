@@ -17,6 +17,10 @@ export const APIUrl = {
     sections: {
       status: () => '/api/routine/sections/status/',
     },
+    rooms: {
+      list: () => '/api/routine/rooms/',
+      detail: (id: string) => `/api/routine/rooms/${id}/`,
+    },
   },
 };
 
@@ -27,6 +31,7 @@ export const RouteUrls = {
   },
   dashboard: {
     index: '/dashboard',
+    rooms: '/dashboard/rooms',
   },
 };
 
