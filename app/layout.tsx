@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
+import { Providers } from '@/lib/providers/providers';
 
 export const metadata: Metadata = {
-  title: "Class Routine Optimizer",
-  description: "Class Routine Optimizer",
+  title: 'Class Routine Optimizer',
+  description: 'Class Routine Optimizer',
 };
 
 export default function RootLayout({
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
