@@ -1,11 +1,13 @@
 'use client';
 
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
 import authService from '@/lib/services/auth.service';
 import { LoginRequest, RegisterRequest } from '@/lib/types/auth';
 
 export default function useAuthAction() {
+  const { data: session } = useSession();
+
   const signinMutation = useMutation({
     mutationFn: async (data: LoginRequest) => {
       const res = await signIn('credentials', {
@@ -39,13 +41,19 @@ export default function useAuthAction() {
 
   const signoutMutation = useMutation({
     mutationFn: async () => {
-      // Try to logout from backend, but don't fail if token is invalid
-      try {
-        await authService.logout();
-      } catch (error) {
-        // Token might be invalid/expired, continue with NextAuth signOut anyway
-        console.warn('Backend logout failed, continuing with session cleanup:', error);
+      // Get refresh token from session before logging out
+      const refreshToken = session?.tokens?.refresh;
+      
+      // Try to logout from backend using refresh token, but don't fail if token is invalid
+      if (refreshToken) {
+        try {
+          await authService.logout(refreshToken);
+        } catch (error) {
+          // Token might be invalid/expired, continue with NextAuth signOut anyway
+          console.warn('Backend logout failed, continuing with session cleanup:', error);
+        }
       }
+      
       // Always sign out from NextAuth session
       await signOut({
         callbackUrl: '/login',

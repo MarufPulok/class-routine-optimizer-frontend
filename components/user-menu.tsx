@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import authService from "@/lib/services/auth.service";
 import { LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import React from "react";
@@ -62,6 +63,23 @@ export default function UserMenu() {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
+      // Get refresh token from session before logging out
+      const refreshToken = session?.tokens?.refresh;
+
+      // Try to logout from backend using refresh token, but don't fail if token is invalid
+      if (refreshToken) {
+        try {
+          await authService.logout(refreshToken);
+        } catch (error) {
+          // Token might be invalid/expired, continue with NextAuth signOut anyway
+          console.warn(
+            "Backend logout failed, continuing with session cleanup:",
+            error
+          );
+        }
+      }
+
+      // Always sign out from NextAuth session
       await signOut({
         callbackUrl: "/login",
       });

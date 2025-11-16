@@ -22,6 +22,8 @@ export interface User {
 export interface TokenResponse {
   access: string;
   refresh: string;
+  access_expires_at?: number; // Unix timestamp
+  refresh_expires_at?: number; // Unix timestamp
 }
 
 export interface AuthResponse {
